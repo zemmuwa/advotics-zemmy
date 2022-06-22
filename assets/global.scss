@@ -1,0 +1,168 @@
+// global css clev
+
+.text-grey {
+  color: grey;
+}
+.text-thin {
+  font-weight: 100;
+}
+.text-no-wrap {
+  white-space: nowrap;
+}
+.v-btn {
+  text-transform: none !important;
+}
+.v-container {
+  background-color: #eceef4;
+}
+.v-col {
+  background-color: #eceef4;
+}
+.v-row {
+  background-color: #eceef4;
+}
+.bg {
+  background-color: #eceef4;
+}
+.v-slide-group__next {
+  background-color: #eceef4;
+}
+.v-content__wrap {
+  background-color: #eceef4;
+  height: 100%;
+}
+.fit-height {
+  background-color: #b3b9ce;
+  height: 100%;
+}
+.text-primary {
+  color: #106030;
+  // color: $color-primary;
+}
+.text-white {
+  color: #fff;
+}
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.img-preview {
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+}
+.selected-items {
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+}
+.theme--light.v-data-table
+  .v-data-table-header
+  th.sortable
+  .v-data-table-header__icon {
+  color: rgba(238, 238, 238, 0.38);
+}
+.theme--light.v-data-table .v-data-table-header th.sortable:hover,
+.theme--light.v-data-table .v-data-table-header th.sortable.active {
+  color: rgba(255, 255, 255, 0.87);
+}
+.theme--light.v-data-table
+  .v-data-table-header
+  th.sortable.active
+  .v-data-table-header__icon {
+  color: rgba(255, 255, 255, 0.87);
+}
+.theme--light.v-data-table .v-data-table-header__sort-badge {
+  background-color: rgba(0, 0, 0, 0.12);
+  color: rgba(255, 255, 255, 0.87);
+}
+
+/* SIDEBAR */
+.status-list .v-list-item--active .v-list-item__title {
+  color: #fff !important;
+}
+.text-status-list {
+  color: rgba(0, 0, 0, 0.6);
+}
+.status-list .v-list-item--active .v-list-item__action {
+  color: #fff !important;
+}
+.text-action-list {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* OTHER ADDITIONAL */
+.text-decoration-none {
+  text-decoration: none;
+}
+.mentor-comment {
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+}
+
+/* SCROLLBAR*/
+.clev-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.clev-scroll::-webkit-scrollbar-track {
+  background: #c4c4c4;
+}
+.clev-scroll::-webkit-scrollbar-thumb {
+  background-color: $color-primary;
+  border-radius: 20px;
+}
+.clev-scroll.scroll-grey::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+}
+.clev-scroll.scroll-grey::-webkit-scrollbar-thumb {
+  background-color: #c4c4c4 !important;
+}
+.no-border-radius {
+  border-radius: 0px !important;
+}
+
+.secondary-background {
+  background-color: #F4F5F8;
+}
+
+@for $i from 1 through 4 {
+  $base: 10;
+  $fontsize: $base + ($i * 2);
+  .font-#{$fontsize} {
+    font-size: $fontsize + 0px;
+  }
+}
+.border-primary {
+  border: 1px solid $color-primary;
+}
+.center-vertical {
+  transform: translateY(-50%);
+  top: 50%;
+}
+.clickable {
+  cursor: pointer;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently                            supported by Chrome, Edge, Opera and Firefox */
+}
+.cursor-default textarea,.cursor-default input,.cursor-default .v-text-field__slot {
+  cursor: default;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently                            supported by Chrome, Edge, Opera and Firefox */
+}
+
+.custom-switch .v-input__slot {
+  display: flex;
+  justify-content: center;
+}
+.custom-switch .v-input--selection-controls__input {
+  margin: 0;
+}

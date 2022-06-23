@@ -133,7 +133,7 @@ export default {
           to: '/inspire',
         },
       ],
-      miniVariant: false,
+      miniVariant: true,
       right: true,
       rightDrawer: false,
       title: 'Vuetify.js',

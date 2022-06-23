@@ -20,10 +20,41 @@
         </v-row>
       </v-card-text>
     </v-card>
+    <div>
+      <v-row class="mt-2">
+        <v-col cols="12" md="3" sm="4">
+          <turn-over-card />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="6">
+          <average-purchase-card />
+        </v-col>
+        <v-col cols="12" md="3">
+          <best-product-card title="BEST SELLING SKU" />
+        </v-col>
+        <v-col cols="12" md="3">
+          <best-product-card title="TOP COMPETITOR SKU" />
+        </v-col>
+      </v-row>
+    </div>
   </div>
 </template>
 
-<style>
+<script>
+import TurnOverCard from '~/components/TurnOverCard.vue'
+import AveragePurchaseCard from '~/components/AveragePurchaseCard.vue'
+import BestProductCard from '~/components/BestProductCard.vue'
+export default {
+  components: {
+    TurnOverCard,
+    AveragePurchaseCard,
+    BestProductCard
+  },
+}
+</script>
+
+<style scoped>
 .title-card {
   font-size: 20px;
   font-weight: 600;

@@ -5,10 +5,10 @@
         <div class="title-content">Dashboard</div>
       </v-col>
       <v-col class="d-flex justify-end">
-        <filter-dashboard />
+        <filter-dashboard :value.sync="filter.date" />
       </v-col>
       <v-col cols="12">
-        <market-insight-card />
+        <market-insight-card :filter-date="filter.date" />
       </v-col>
     </v-row>
   </div>
@@ -22,6 +22,13 @@ export default {
   components: {
     FilterDashboard,
     MarketInsightCard,
+  },
+  data() {
+    return {
+      filter: {
+        date: '',
+      },
+    }
   },
 }
 </script>

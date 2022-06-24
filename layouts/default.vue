@@ -36,7 +36,14 @@
           "
         >
           <v-list-item-action>
-            <v-avatar color="white" tile max-width="24px" max-height="24px" min-width="24px" min-height="24px" >
+            <v-avatar
+              color="white"
+              tile
+              max-width="24px"
+              max-height="24px"
+              min-width="24px"
+              min-height="24px"
+            >
               <v-img
                 src="/dashboard-icon.svg"
                 max-height="17"

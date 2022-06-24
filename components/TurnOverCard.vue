@@ -9,7 +9,7 @@
             </div>
             <v-row class="mt-1">
               <v-col class="flex-grow-1 flex-shrink-0">
-                <div class="nominal">Rp 3,600,000</div>
+                <div class="nominal">Rp {{ nominal }}</div>
                 <div class="mt-1">
                   <v-icon size="10" color="error">mdi-arrow-down-thick</v-icon>
                   <div class="d-inline-block text-10">
@@ -41,6 +41,17 @@
   </div>
 </template>
 
+<script>
+export default {
+  props: {
+    nominal: {
+      type: String,
+      default: '0',
+    },
+  },
+}
+</script>
+
 <style scoped>
 .card-title {
   color: #43425d;
@@ -54,7 +65,7 @@
   font-size: 25px;
 }
 
-.text-10{
+.text-10 {
   font-size: 10px;
 }
 </style>

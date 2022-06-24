@@ -2,41 +2,47 @@
   <div>
     <v-card>
       <v-card-text>
-        <v-row class="align-center">
-          <v-col>
-            <div class="title-card">AVERAGE PURCHASE VALUE</div>
-          </v-col>
-          <v-col>
-            <div class="d-flex align-center justify-end">
-              <div class="filter-date">
-                <v-select
-                  v-model="model.filter"
-                  :items="items"
-                  item-text="label"
-                  item-value="value"
-                  outlined
-                  dense
-                  hide-details
-                ></v-select>
+        <div class="card-dashboard">
+          <v-row class="align-center">
+            <v-col>
+              <div class="title-card">AVERAGE PURCHASE VALUE</div>
+            </v-col>
+            <v-col>
+              <div class="d-flex align-center justify-end">
+                <div class="filter-date">
+                  <v-select
+                    v-model="model.filter"
+                    :items="items"
+                    item-text="label"
+                    item-value="value"
+                    outlined
+                    dense
+                    hide-details
+                    @change="generateData()"
+                  ></v-select>
+                </div>
+                <v-btn class="ml-1" tile icon>
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
               </div>
-              <v-btn class="ml-1" tile icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </div>
-          </v-col>
-        </v-row>
-        <apex-chart
-          type="line"
-          height="350"
-          :options="chartOptions"
-          :series="series"
-        />
+            </v-col>
+          </v-row>
+          <apex-chart
+            type="line"
+            height="350"
+            :options="chartOptions"
+            :series="series"
+          />
+        </div>
       </v-card-text>
     </v-card>
   </div>
 </template>
+
 <script>
+import utilMixin from '~/mixins/utilMixins'
 export default {
+  mixins: [utilMixin],
   data() {
     return {
       model: {
@@ -46,6 +52,13 @@ export default {
         { label: 'Last 6 months', value: 6 },
         { label: 'Last 3 months', value: 3 },
       ],
+      data: {
+        series: {
+          nett: [],
+          gross: [],
+          apv: [],
+        },
+      },
     }
   },
   computed: {
@@ -53,21 +66,21 @@ export default {
       return [
         {
           name: 'Nett',
-          data: [20, 30, 20, 30, 12, 21, 32],
+          data: this.data.series.nett,
           type: 'column',
           color: '#37b04c',
           max: 100,
         },
         {
           name: 'Gross',
-          data: [3, 2, 1, 4, 2, 1, 3],
+          data: this.data.series.gross,
           type: 'column',
           color: '#289e45',
           max: 0,
         },
         {
           name: 'APV',
-          data: [10, 20, 10, 20, 10, 20, 10],
+          data: this.data.series.apv,
           type: 'line',
           color: '#ffe857',
         },
@@ -198,6 +211,24 @@ export default {
         // },
       }
       // ----------------------------
+    },
+  },
+  mounted() {
+    this.generateData()
+  },
+  methods: {
+    generateData() {
+      const nett = []
+      const gross = []
+      const apv = []
+      for (let index = 0; index < 7; index++) {
+        nett.push(this.getRandom(10, 50))
+        gross.push(this.getRandom(1, 10))
+        apv.push(this.getRandom(10, 50))
+      }
+      this.data.series.nett = nett
+      this.data.series.gross = gross
+      this.data.series.apv = apv
     },
   },
 }

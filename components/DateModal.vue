@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="dialogController" persistent :max-width="600">
+    <v-dialog v-model="dialogController" :max-width="600">
       <v-card>
         <v-card-text>
           <v-row class="mt-2">
@@ -20,7 +20,7 @@
             </v-col>
             <v-col class="text-right">
               <v-btn small icon>
-                <v-icon>mdi-close</v-icon>
+                <v-icon @click="closeDialog()">mdi-close</v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -32,6 +32,7 @@
                     <v-list-item
                       :key="`list-${IfilterItem}`"
                       :disabled="filterItem == 'Today'"
+                      :value="filterItem"
                     >
                       <v-list-item-content>
                         <v-list-item-title v-text="filterItem" />
@@ -41,7 +42,7 @@
                   </template>
                 </v-list-item-group>
               </v-list>
-              <v-btn block color="primary">Apply</v-btn>
+              <v-btn color="primary" block @click="apply()">Apply</v-btn>
             </v-col>
             <v-col cols="8">
               <v-date-picker
@@ -50,24 +51,47 @@
                 no-title
                 range
                 scrollable
+                :max="maxDate"
                 full-width
-                :readonly="selectedItem != '5'"
+                :readonly="selectedItem != 'Custom'"
               />
             </v-col>
           </v-row>
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="error" :timeout="timeout" color="error" text right top>
+      <div class="font-weight-bold">Maximum time range is 6 months !</div>
+
+      <template #action="{ attrs }">
+        <v-btn
+          small
+          color="error"
+          text
+          v-bind="attrs"
+          icon
+          @click="error = false"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
+import dateMixins from '~/mixins/dateMixins'
 export default {
+  mixins: [dateMixins],
   props: {
     dialog: {
       type: Boolean,
       default: false,
+    },
+    selected: {
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -79,9 +103,11 @@ export default {
         'Yesterday',
         'Last 7 days',
         'Last 30 days',
-        'This month',
+        'This Month',
         'Custom',
       ],
+      error: false,
+      timeout: 3000,
     }
   },
   computed: {
@@ -93,25 +119,43 @@ export default {
         this.$emit('update:dialog', newValue)
       },
     },
-    minDate() {
-      if (this.dates.length === 0) {
-        return moment().subtract(29, 'days').format('YYYY-MM-DD')
-      } else {
-        return moment(this.dates[0]).subtract(29, 'days').format('YYYY-MM-DD')
-      }
+    selectedController: {
+      get() {
+        return this.selected
+      },
+      set(value) {
+        this.$emit('update:selected', value)
+      },
     },
+    // minDate() {
+    //   return moment().subtract(6, 'months').format('YYYY-MM-DD')
+    // },
     maxDate() {
-      if (this.dates.length === 0) {
-        return moment().add(29, 'days').format('YYYY-MM-DD')
-      } else {
-        return moment(this.dates[0]).add(29, 'days').format('YYYY-MM-DD')
-      }
+      return moment().subtract(1, 'days').format('YYYY-MM-DD')
     },
   },
   watch: {
     selectedItem(val) {
       switch (val) {
-        case 1:
+        case 'Yesterday':
+          this.dates = [moment().subtract(1, 'days').format('YYYY-MM-DD')]
+          break
+        case 'Last 7 days':
+          this.dates = [
+            moment().subtract(7, 'days').format('YYYY-MM-DD'),
+            moment().subtract(1, 'days').format('YYYY-MM-DD'),
+          ]
+          break
+        case 'Last 30 days':
+          this.dates = [
+            moment().subtract(30, 'days').format('YYYY-MM-DD'),
+            moment().subtract(1, 'days').format('YYYY-MM-DD'),
+          ]
+          break
+        case 'This Month':
+          this.dates = this.getThisMonthToThisDate()
+          break
+        case 'Custom':
           this.dates = []
           break
 
@@ -119,65 +163,48 @@ export default {
           break
       }
     },
+    selected(val) {
+      if (val.includes('Custom')) {
+        const arrCustom = val.split('/')
+        if (arrCustom.length === 2) {
+          this.dates = [arrCustom[1]]
+        } else if (arrCustom.length === 3) {
+          this.dates = [arrCustom[1], arrCustom[2]]
+        }
+        this.selectedItem = 'Custom'
+      } else {
+        this.selectedItem = val
+      }
+    },
   },
   methods: {
-    generateFilterDate(onlyStart) {
-      let start = moment()
-      let end = moment()
-      this.prependInfo = 'Today'
-      switch (this.filterDate) {
-        case 'yesterday':
-          start = moment().subtract(1, 'days')
-          end = moment().subtract(1, 'days')
-          this.prependInfo = 'Yesterday'
-          break
-        case 'last-7-days':
-          start = moment().subtract(6, 'days')
-          break
-        case 'last-14-days':
-          start = moment().subtract(13, 'days')
-          break
-        case 'last-28-days':
-          start = moment().subtract(27, 'days')
-          break
-        case 'last-30-days':
-          start = moment().subtract(29, 'days')
-          break
-        case 'last-365-days':
-          start = moment().subtract(365, 'days')
-          break
-        case 'custom':
-          if (moment(this.dates[0]) > moment(this.dates[1])) {
-            this.switchDate()
-          }
-          start = moment(this.dates[0])
-          end = moment(this.dates[1])
-          if (this.dates.length === 0) {
-            start = moment(this.datesDetail[0])
-            end = moment(this.datesDetail[1])
-          }
-          break
-      }
-      if (this.filterDate !== 'yesterday' && this.filterDate !== 'today') {
-        this.prependInfo =
-          start.format('MMM DD, YYYY') + ' - ' + end.format('MMM DD, YYYY')
-      }
-      start = start.format('YYYY-MM-DD')
-      end = end.format('YYYY-MM-DD')
-      if (this.datesDetail.length === 0) {
-        this.datesDetail.push(start)
-        this.datesDetail.push(end)
+    apply() {
+      if (this.validate()) {
+        if (this.selectedItem === 'Custom') {
+          this.selectedController = `${this.selectedItem}/${this.dates.join(
+            '/'
+          )}`
+        } else {
+          this.selectedController = this.selectedItem
+        }
+        this.closeDialog()
       } else {
-        this.datesDetail[0] = start
-        this.datesDetail[1] = end
+        this.error = true
       }
-      if (onlyStart) {
-        return `date=${start}`
-      } else {
-        start += ' 00:00:00'
-        end += ' 00:00:00'
-        return `start_date=${start}&end_date=${end}`
+    },
+    closeDialog() {
+      this.dialogController = false
+    },
+    validate() {
+      if (this.dates.length > 1) {
+        const firstDate = moment(this.dates[0])
+        const LastDate = moment(this.dates[1])
+        const diff = firstDate.diff(LastDate, 'days')
+        if (Math.abs(diff) > 180) {
+          return false
+        }
       }
+      return true
     },
   },
 }
